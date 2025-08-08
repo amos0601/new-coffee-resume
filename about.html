@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amos</title>
+  <!-- fontawesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- styles -->
+  <link rel="stylesheet" href="styles.css" />
+  
+  <style>
+    /* 作品畫廊樣式 */
+    .gallery-section {
+      margin-top: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      border: 2px solid rgba(139, 69, 19, 0.3);
+      padding: 12px;
+      text-align: center;
+    }
+
+    .gallery-section h3 {
+      color: #ffffff;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+      font-weight: bold;
+      border: 2px solid #A9744F;
+      border-radius: 8px;
+      padding: 6px 12px;
+      display: inline-block;
+    }
+
+    .gallery-container {
+      position: relative;
+      max-width: 280px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 
+        0 8px 20px rgba(0,0,0,0.3),
+        0 0 0 2px #8B4513,
+        0 0 15px rgba(139, 69, 19, 0.4);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-container:hover {
+      transform: scale(1.02);
+    }
+
+    .gallery-image {
+      display: none;
+      position: relative;
+    }
+
+    .gallery-image.active {
+      display: block;
+    }
+
+    .gallery-image img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    /* CVA 證書和文檔類圖片特殊顯示 */
+    .gallery-image[data-index="7"] img {
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+    }
+
+    .gallery-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      padding: 0 10px;
+    }
+
+    .gallery-btn {
+      background: #8B4513;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .gallery-btn:hover {
+      background: #A0522D;
+      transform: scale(1.1);
+    }
+
+    .gallery-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(139, 69, 19, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: #8B4513;
+      transform: scale(1.3);
+    }
+
+    .dot:hover {
+      background: #A0522D;
+    }
+
+    /* 大畫面模態框樣式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-container {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #fff;
+      color: #8B4513;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10001;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: #A0522D;
+      transform: scale(1.1);
+    }
+
+    .modal-gallery {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .modal-images {
+      position: relative;
+      max-width: 600px;
+      max-height: 400px;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    .modal-image {
+      width: 100%;
+      height: 400px;
+      object-fit: contain;
+      display: none;
+      border-radius: 15px;
+    }
+
+    /* CVA 證書在模態框中的特殊顯示 */
+    .modal-image:nth-child(8) {
+      background: rgba(255, 255, 255, 0.95);
+      object-fit: contain;
+      padding: 20px;
+    }
+
+    .modal-image.active {
+      display: block;
+    }
+
+    .modal-btn {
+      background: #fff;
+      color: #8B4513;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .modal-btn:hover {
+      background: #f0f0f0;
+      color: #A0522D;
+      transform: scale(1.1);
+    }
+
+    .modal-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .modal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-dot.active {
+      background: #fff;
+      transform: scale(1.2);
+    }
+
+    .modal-dot:hover {
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    /* 手機版響應式 */
+    @media (max-width: 768px) {
+      .gallery-section {
+        padding: 15px;
+        margin-top: 30px; /* 大幅增加間距避免與上方文字重疊 */
+        margin-bottom: 20px;
+      }
+      
+      .gallery-container {
+        max-width: 100%;
+        margin-top: 10px;
+      }
+      
+      .gallery-image img {
+        height: 150px;
+      }
+
+      /* CVA 證書在手機版的特殊顯示 */
+      .gallery-image[data-index="7"] img {
+        padding: 5px;
+      }
+      
+      .gallery-nav {
+        padding: 0 5px;
+        margin-top: 10px;
+      }
+      
+      .gallery-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+      }
+
+      .gallery-section h3 {
+        margin-bottom: 8px;
+        font-size: 1em;
+      }
+
+      .modal-container {
+        max-width: 95vw;
+        max-height: 95vh;
+        padding: 15px;
+      }
+
+      .modal-images {
+        max-height: 300px;
+      }
+
+      .modal-image {
+        height: 300px;
+      }
+
+      .modal-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+
+      .modal-gallery {
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gallery-section {
+        padding: 12px;
+        margin-top: 25px;
+      }
+
+      .gallery-image img {
+        height: 120px;
+      }
+
+      /* CVA 證書在小螢幕的特殊顯示 */
+      .gallery-image[data-index="7"] img {
+        padding: 3px;
+      }
+      
+      .gallery-section h3 {
+        font-size: 0.9em;
+        padding: 5px 10px;
+      }
+
+      .modal-images {
+        max-height: 250px;
+      }
+
+      .modal-image {
+        height: 250px;
+      }
+
+      .modal-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body class="about">
+  <!-- 頁首 header -->
+  <header>
+    <a class="logo" href="index.html">Amos</a>
+    
+    <!-- 漢堡菜單按鈕 -->
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    
+    <!-- 側邊欄導航 -->
+    <nav class="nav-bar" id="nav-bar">
+      <a class="nav-items" href="index.html">Home</a>
+      <a class="nav-items" href="about.html">About</a>
+      <a class="nav-items" href="Skills.html">Skills</a>
+      <a class="nav-items" href="Contacts.html">Contacts</a>
+    </nav>
+  </header>
+
+  <!-- 主要內容 -->
+  <section class="about-main about-row">
+    <div class="about-block">
+      <h2>關於我</h2>
+      <div class="about-content">
+        姓名：詹閔翔<br>
+        生日：2002/06/01<br>
+  
+        興趣：閱讀、攝影、學習、咖啡<br>
+        個人介紹：<br>
+        熱愛咖啡文化，具備紮實的實務沖煮經驗與拉花基礎，
+        曾修習咖啡水質管理、杯測與風味評鑑等專業課程，
+        並於咖啡沖煮競賽中獲得冠軍成績。 擅長團隊合作與教學分享
+        ，期望在專業咖啡館中發揮所長、精進技藝。
+        在空閒時間喜愛跑咖、閱讀與學習新知，受哲學背景影響，對各領域知識充滿好奇與探索熱情。<br>
+        <br>應徵動機:<br>
+        希望能在專業咖啡館中發揮所長，精進技藝，並與團隊共同成長。
+        對咖啡文化的熱愛驅使我不斷學習與挑戰自我，
+        期待能在這個領域中持續探索與創新。<br><br>
+        以上聽起來可能很客套，說實話我也有點這樣覺得，
+        如果說直接點就是我需要這份工作，但不是因為錢，
+        而是單純願意被操到死，我就算沒上班的日子也會去店裡沖咖啡，
+        因為這是我唯一的興趣，唯一的愛好，第一次感覺到擅長的事情。
+      </div>
+    </div>
+    <div class="about-block">
+      <h2>學歷</h2>
+      <div class="about-content">
+        銘傳大學-應用統計與資訊科學學系<br>
+        2020/6～2021/6<br>
+        銘傳大學-財金系<br>
+        2021/8～2022/1<br>
+        輔仁大學-哲學系<br>
+        2022/3～2025/1
+      </div>
+      
+      <!-- 作品畫廊 -->
+      <div class="gallery-section">
+        <h3>作品集(click me)</h3>
+        <div class="gallery-container" onclick="openModal()">
+          <div class="gallery-image active" data-index="0">
+            <img src="champion1.JPG" alt="冠軍照片1">
+          </div>
+          <div class="gallery-image" data-index="1">
+            <img src="champion2.jpg" alt="冠軍照片2">
+          </div>
+          <div class="gallery-image" data-index="2">
+            <img src="lattle art1.JPG" alt="Latte Art 作品1">
+          </div>
+          <div class="gallery-image" data-index="3">
+            <img src="lattle art2.JPG" alt="Latte Art 作品2">
+          </div>
+          <div class="gallery-image" data-index="4">
+            <img src="lattle art3.JPG" alt="Latte Art 作品3">
+          </div>
+          <div class="gallery-image" data-index="5">
+            <img src="lattle art4.JPG" alt="Latte Art 作品4">
+          </div>
+          <div class="gallery-image" data-index="6">
+            <img src="lattle art5.jpg" alt="Latte Art 作品5">
+          </div>
+          <div class="gallery-image" data-index="7">
+            <img src="cva.png" alt="CVA 證書">
+          </div>
+        </div>
+        <div class="gallery-nav">
+          <button class="gallery-btn prev" onclick="event.stopPropagation(); prevImage()">‹</button>
+          <div class="gallery-dots">
+            <span class="dot active" onclick="event.stopPropagation(); currentImage(0)"></span>
+            <span class="dot" onclick="event.stopPropagation(); currentImage(1)"></span>
+            <span class="dot" onclick="event.stopPropagation(); currentImage(2)"></span>
+            <span class="dot" onclick="event.stopPropagation(); currentImage(3)"></span>
+            <span class="dot" onclick="event.stopPropagation(); currentImage(4)"></span>
+            <span class="dot" onclick="event.stopPropagation(); currentImage(5)"></span>
+            <span class="dot" onclick="event.stopPropagation(); currentImage(6)"></span>
+            <span class="dot" onclick="event.stopPropagation(); currentImage(7)"></span>
+          </div>
+          <button class="gallery-btn next" onclick="event.stopPropagation(); nextImage()">›</button>
+        </div>
+      </div>
+    </div>
+    <div class="about-block">
+      <h2>工作經驗</h2>
+      <div class="about-content">
+      春秋書店(2023/10 — 至今)<br>
+吧台手＆行政:<br>會計和薪資勞保計算的excel程式語言，咖啡
+豆廠商接洽，庫存管理與良率計算，咖啡沖煮和調整，4F的店膝蓋早已習慣<br><br>
+水花婚紗攝影 (2023/1~2023/6)<br>
+攝影助理:<br>基礎攝影、場佈、圖片修圖和與調色、婚禮相本排版<br><br>
+如果花知道(2021/10~2021/12)<br>
+燈光助理:<br>打燈、基礎剪輯、場佈、燈光調整<br>
+      </div>
+    </div>
+  </section>
+
+  <!-- 頁尾 socials -->
+  <div class="socials">
+    <a href="https://www.facebook.com/moon.zhan.9/" target="_blank">
+      <i class="fa-brands fa-facebook-f"></i>
+    </a>
+    <a href="https://www.instagram.com/amos.0601/" target="_blank">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
+    <a href="https://mail.google.com/mail/?view=cm&to=coco29523995@gmail.com" target="_blank">
+      <i class="fa-solid fa-envelope"></i>
+    </a>
+  </div>
+
+  <!-- 大畫面模態框 -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+    <div class="modal-container" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-gallery">
+        <button class="modal-btn prev" onclick="modalPrevImage()">‹</button>
+        <div class="modal-images">
+          <img class="modal-image active" src="champion1.JPG" alt="冠軍照片1">
+          <img class="modal-image" src="champion2.jpg" alt="冠軍照片2">
+          <img class="modal-image" src="lattle art1.JPG" alt="Latte Art 作品1">
+          <img class="modal-image" src="lattle art2.JPG" alt="Latte Art 作品2">
+          <img class="modal-image" src="lattle art3.JPG" alt="Latte Art 作品3">
+          <img class="modal-image" src="lattle art4.JPG" alt="Latte Art 作品4">
+          <img class="modal-image" src="lattle art5.jpg" alt="Latte Art 作品5">
+          <img class="modal-image" src="cva.png" alt="CVA 證書">
+        </div>
+        <button class="modal-btn next" onclick="modalNextImage()">›</button>
+      </div>
+      <div class="modal-dots">
+        <span class="modal-dot active" onclick="modalCurrentImage(0)"></span>
+        <span class="modal-dot" onclick="modalCurrentImage(1)"></span>
+        <span class="modal-dot" onclick="modalCurrentImage(2)"></span>
+        <span class="modal-dot" onclick="modalCurrentImage(3)"></span>
+        <span class="modal-dot" onclick="modalCurrentImage(4)"></span>
+        <span class="modal-dot" onclick="modalCurrentImage(5)"></span>
+        <span class="modal-dot" onclick="modalCurrentImage(6)"></span>
+        <span class="modal-dot" onclick="modalCurrentImage(7)"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 小畫廊功能
+    let currentImageIndex = 0;
+    let modalImageIndex = 0;
+    const images = document.querySelectorAll('.gallery-image');
+    const dots = document.querySelectorAll('.dot');
+    const modalImages = document.querySelectorAll('.modal-image');
+    const modalDots = document.querySelectorAll('.modal-dot');
+
+    function showImage(index) {
+      images.forEach((img, i) => {
+        img.classList.remove('active');
+        dots[i].classList.remove('active');
+      });
+      
+      images[index].classList.add('active');
+      dots[index].classList.add('active');
+      currentImageIndex = index;
+    }
+
+    function nextImage() {
+      const nextIndex = (currentImageIndex + 1) % images.length;
+      showImage(nextIndex);
+    }
+
+    function prevImage() {
+      const prevIndex = (currentImageIndex - 1 + images.length) % images.length;
+      showImage(prevIndex);
+    }
+
+    function currentImage(index) {
+      showImage(index);
+    }
+
+    // 大畫面模態框功能
+    function openModal() {
+      const modal = document.getElementById('modal-overlay');
+      modalImageIndex = currentImageIndex; // 從當前小畫廊圖片開始
+      showModalImage(modalImageIndex);
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden'; // 防止背景滾動
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal-overlay');
+      modal.classList.remove('show');
+      document.body.style.overflow = 'auto'; // 恢復滾動
+    }
+
+    function showModalImage(index) {
+      modalImages.forEach((img, i) => {
+        img.classList.remove('active');
+        modalDots[i].classList.remove('active');
+      });
+      
+      modalImages[index].classList.add('active');
+      modalDots[index].classList.add('active');
+      modalImageIndex = index;
+    }
+
+    function modalNextImage() {
+      const nextIndex = (modalImageIndex + 1) % modalImages.length;
+      showModalImage(nextIndex);
+    }
+
+    function modalPrevImage() {
+      const prevIndex = (modalImageIndex - 1 + modalImages.length) % modalImages.length;
+      showModalImage(prevIndex);
+    }
+
+    function modalCurrentImage(index) {
+      showModalImage(index);
+    }
+
+    // 鍵盤導航（只在模態框開啟時）
+    document.addEventListener('keydown', function(e) {
+      const modal = document.getElementById('modal-overlay');
+      if (modal.classList.contains('show')) {
+        if (e.key === 'ArrowLeft') {
+          modalPrevImage();
+        } else if (e.key === 'ArrowRight') {
+          modalNextImage();
+        } else if (e.key === 'Escape') {
+          closeModal();
+        }
+      }
+    });
+
+    // 模態框內的觸控滑動
+    let modalStartX = 0;
+    let modalEndX = 0;
+    let modalStartY = 0;
+    let modalEndY = 0;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const modalContainer = document.querySelector('.modal-images');
+      
+      modalContainer.addEventListener('touchstart', function(e) {
+        modalStartX = e.touches[0].clientX;
+        modalStartY = e.touches[0].clientY;
+      });
+
+      modalContainer.addEventListener('touchend', function(e) {
+        modalEndX = e.changedTouches[0].clientX;
+        modalEndY = e.changedTouches[0].clientY;
+        handleModalSwipe();
+      });
+    });
+
+    function handleModalSwipe() {
+      const swipeThreshold = 50;
+      const diffX = modalStartX - modalEndX;
+      const diffY = Math.abs(modalStartY - modalEndY);
+      
+      if (Math.abs(diffX) > swipeThreshold && diffY < 100) {
+        if (diffX > 0) {
+          modalNextImage();
+        } else {
+          modalPrevImage();
+        }
+      }
+    }
+
+    function toggleMenu() {
+      const navBar = document.getElementById('nav-bar');
+      const hamburger = document.querySelector('.hamburger');
+      const mainContent = document.querySelector('.about-main');
+      const socials = document.querySelector('.socials');
+      
+      navBar.classList.toggle('active');
+      hamburger.classList.toggle('active');
+      
+      // 切換內容可見性
+      if (navBar.classList.contains('active')) {
+        mainContent.style.opacity = '0';
+        mainContent.style.pointerEvents = 'none';
+        socials.style.opacity = '0';
+        socials.style.pointerEvents = 'none';
+      } else {
+        mainContent.style.opacity = '1';
+        mainContent.style.pointerEvents = 'auto';
+        socials.style.opacity = '1';
+        socials.style.pointerEvents = 'auto';
+      }
+    }
+
+    // 點擊導航項目後自動關閉菜單並恢復內容
+    document.querySelectorAll('.nav-items').forEach(item => {
+      item.addEventListener('click', () => {
+        const navBar = document.getElementById('nav-bar');
+        const hamburger = document.querySelector('.hamburger');
+        const mainContent = document.querySelector('.about-main');
+        const socials = document.querySelector('.socials');
+        
+        navBar.classList.remove('active');
+        hamburger.classList.remove('active');
+        mainContent.style.opacity = '1';
+        mainContent.style.pointerEvents = 'auto';
+        socials.style.opacity = '1';
+        socials.style.pointerEvents = 'auto';
+      });
+    });
+  </script>
+</body>
+</html>

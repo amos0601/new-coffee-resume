@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amos</title>
+  <!-- fontawesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- styles -->
+  <link rel="stylesheet" href="styles.css" />
+  
+</head>
+
+<body class="about">
+  <!-- 頁首 header -->
+  <header>
+    <a class="logo" href="index.html">Amos</a>
+    
+    <!-- 漢堡菜單按鈕 -->
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    
+    <!-- 側邊欄導航 -->
+    <nav class="nav-bar" id="nav-bar">
+      <a class="nav-items" href="index.html">Home</a>
+      <a class="nav-items" href="about.html">About</a>
+      <a class="nav-items" href="Skills.html">Skills</a>
+      <a class="nav-items" href="Contacts.html">Contacts</a>
+    </nav>
+    
+  </header>
+
+ <section class="contact-main">
+  <h2>聯絡資訊</h2>
+  <div class="info">
+    <i class="fa-solid fa-envelope"></i> coco29523995@gmail.com
+  </div>
+  <div class="info">
+    <i class="fa-solid fa-phone"></i> 0988-318-732
+  </div>
+  <div class="info">
+    <i class="fa-solid fa-location-dot"></i> 新北市板橋區
+  </div>
+  <div class="info">
+  <i class="fa-brands fa-instagram"></i>
+  <a href="https://www.instagram.com/amos.0601/" target="_blank">@amos.0601</a>
+</div>
+<div class="info">
+  <i class="fa-brands fa-facebook-f"></i>
+  <a href="https://www.facebook.com/moon.zhan.9/" target="_blank">Facebook</a>
+</div>
+</section>
+
+  <!-- 頁尾 socials -->
+  <div class="socials">
+    <a href="https://www.facebook.com/moon.zhan.9/" target="_blank">
+      <i class="fa-brands fa-facebook-f"></i>
+    </a>
+    <a href="https://www.instagram.com/amos.0601/" target="_blank">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
+    <a href="https://mail.google.com/mail/?view=cm&to=coco29523995@gmail.com" target="_blank">
+      <i class="fa-solid fa-envelope"></i>
+    </a>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const navBar = document.getElementById('nav-bar');
+      const hamburger = document.querySelector('.hamburger');
+      const contactMain = document.querySelector('.contact-main');
+      const socials = document.querySelector('.socials');
+      
+      navBar.classList.toggle('active');
+      hamburger.classList.toggle('active');
+      
+      // 切換內容可見性
+      if (navBar.classList.contains('active')) {
+        contactMain.style.opacity = '0';
+        contactMain.style.pointerEvents = 'none';
+        socials.style.opacity = '0';
+        socials.style.pointerEvents = 'none';
+      } else {
+        contactMain.style.opacity = '1';
+        contactMain.style.pointerEvents = 'auto';
+        socials.style.opacity = '1';
+        socials.style.pointerEvents = 'auto';
+      }
+    }
+
+    // 點擊導航項目後自動關閉菜單並恢復內容
+    document.querySelectorAll('.nav-items').forEach(item => {
+      item.addEventListener('click', () => {
+        const navBar = document.getElementById('nav-bar');
+        const hamburger = document.querySelector('.hamburger');
+        const contactMain = document.querySelector('.contact-main');
+        const socials = document.querySelector('.socials');
+        
+        navBar.classList.remove('active');
+        hamburger.classList.remove('active');
+        contactMain.style.opacity = '1';
+        contactMain.style.pointerEvents = 'auto';
+        socials.style.opacity = '1';
+        socials.style.pointerEvents = 'auto';
+      });
+    });
+  </script>
+</body>
+</html>
+    </a>

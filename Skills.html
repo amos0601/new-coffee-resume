@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amos</title>
+  <!-- fontawesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- styles -->
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Skills 專屬四宮格排版 */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;   /* 兩欄 */
+      grid-template-rows: 1fr 1fr;      /* 兩排 */
+      gap: 48px;
+      max-width: 900px;
+      margin: 60px auto 60px auto;      /* 上下間距縮小，整體往上 */
+      min-height: 480px;
+    }
+    
+    @media (max-width: 900px) {
+      .skills-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 32px;
+        min-height: unset;
+        margin: 100px auto 100px auto;    /* 為固定 header 和底部社交圖標留空間 */
+      }
+    }
+    .skill-card {
+      background: linear-gradient(135deg, #a9744f 80%, #8a5a36 100%);
+      color: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 32px 0 rgba(0,0,0,0.13);
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      min-height: 180px;
+      min-width: 220px;
+      font-size: 1.1rem;
+    }
+    .skill-card:hover {
+      transform: translateY(-8px) scale(1.04);
+      box-shadow: 0 12px 36px 0 rgba(169,116,79,0.18);
+    }
+    .skill-card i {
+      font-size: 2.8rem;
+      margin-bottom: 18px;
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(169,116,79,0.25);
+    }
+    .skill-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+      text-align: center;
+    }
+    .skill-desc {
+      font-size: 1rem;
+      text-align: center;
+      line-height: 1.7;
+      color: #fff;
+      opacity: 0.92;
+    }
+    @media (max-width: 900px) {
+      .skills-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 32px;
+        min-height: unset;
+      }
+    }
+  </style>
+</head>
+
+<body class="about">
+  <!-- 頁首 header -->
+  <header>
+    <a class="logo" href="index.html">Amos</a>
+    
+    <!-- 漢堡菜單按鈕 -->
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    
+    <!-- 側邊欄導航 -->
+    <nav class="nav-bar" id="nav-bar">
+      <a class="nav-items" href="index.html">Home</a>
+      <a class="nav-items" href="about.html">About</a>
+      <a class="nav-items" href="Skills.html">Skills</a>
+      <a class="nav-items" href="Contacts.html">Contacts</a>
+    </nav>
+  </header>
+
+  <!-- 技能四宮格 -->
+  <section class="skills-grid">
+    <div class="skill-card">
+      <i class="fa-solid fa-mug-hot"></i>
+      <div class="skill-title">咖啡沖煮</div>
+      <div class="skill-desc">熟悉手沖、義式、拉花、虹吸等咖啡技能，
+
+      </br>可獨立作業。</br>且擁有SCA CVA（咖啡價值評估系統）證照能根據豆種調整最佳風味。<br />
+     操作過 Woots 3.0 落地型半熱風烘豆機。</div>
+    </div>
+    <div class="skill-card">
+      <i class="fa-solid fa-chart-line"></i>
+      <div class="skill-title">數據分析</div>
+      <div class="skill-desc">具備統計證照和會計學基礎，</br>可做簡單的財務報表計算和分析。</div>
+    </div>
+    <div class="skill-card">
+      <i class="fa-solid fa-camera-retro"></i>
+      <div class="skill-title">攝影修圖</div>
+      <div class="skill-desc">擔任過商品、人像攝影的修圖與調色，
+        </br>熟悉 Lightroom、Photoshop 等軟體。
+        </br>有影片剪輯基礎，會記錄自己沖咖啡的過程，</br>可點擊IG圖示參考</div>
+    </div>
+    <div class="skill-card">
+  <i class="fa-solid fa-comments"></i>
+  <div class="skill-title">團隊協作</div>
+  <div class="skill-desc">邏輯清晰，具備部門溝通與協作經驗，</br>推動專案進行。
+  </br>擁有社團和咖啡廳的咖啡教學經驗，</br>能有效發揮團隊合作精神。</div>
+</div>
+  </section>
+
+  <!-- 頁尾 socials -->
+  <div class="socials">
+    <a href="https://www.facebook.com/moon.zhan.9/" target="_blank">
+      <i class="fa-brands fa-facebook-f"></i>
+    </a>
+    <a href="https://www.instagram.com/amos.0601/" target="_blank">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
+    <a href="https://mail.google.com/mail/?view=cm&to=coco29523995@gmail.com" target="_blank">
+      <i class="fa-solid fa-envelope"></i>
+    </a>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const navBar = document.getElementById('nav-bar');
+      const hamburger = document.querySelector('.hamburger');
+      const skillsGrid = document.querySelector('.skills-grid');
+      const socials = document.querySelector('.socials');
+      
+      navBar.classList.toggle('active');
+      hamburger.classList.toggle('active');
+      
+      // 切換內容可見性
+      if (navBar.classList.contains('active')) {
+        skillsGrid.style.opacity = '0';
+        skillsGrid.style.pointerEvents = 'none';
+        socials.style.opacity = '0';
+        socials.style.pointerEvents = 'none';
+      } else {
+        skillsGrid.style.opacity = '1';
+        skillsGrid.style.pointerEvents = 'auto';
+        socials.style.opacity = '1';
+        socials.style.pointerEvents = 'auto';
+      }
+    }
+
+    // 點擊導航項目後自動關閉菜單並恢復內容
+    document.querySelectorAll('.nav-items').forEach(item => {
+      item.addEventListener('click', () => {
+        const navBar = document.getElementById('nav-bar');
+        const hamburger = document.querySelector('.hamburger');
+        const skillsGrid = document.querySelector('.skills-grid');
+        const socials = document.querySelector('.socials');
+        
+        navBar.classList.remove('active');
+        hamburger.classList.remove('active');
+        skillsGrid.style.opacity = '1';
+        skillsGrid.style.pointerEvents = 'auto';
+        socials.style.opacity = '1';
+        socials.style.pointerEvents = 'auto';
+      });
+    });
+  </script>
+</body>
+</html>
